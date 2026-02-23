@@ -99,9 +99,9 @@ uvicorn src.main:app --reload
 
 Swagger:
 
-- `http://127.0.0.1:8000/docs`
-- `http://127.0.0.1:8000/redoc`
-- Frontend mini dashboard: `http://127.0.0.1:8000/app`
+- `http://bibliotheque-rad.vercel.app/docs`
+- `http:/bibliotheque-rad.vercel.app/books`
+
 
 ## API CRUD (minimum)
 
@@ -222,8 +222,9 @@ Inserer des captures:
 4. Garder `vercel.json` du projet (route tout vers `api/index.py`).
 5. Ajouter la variable d'environnement `DATABASE_URL` dans Vercel.
 6. Deploy et tester:
-   - `https://<ton-projet>.vercel.app/docs`
-   - `https://<ton-projet>.vercel.app/health`
+   - `https://bibliotheque-rad.vercel.app/docs`
+   - `https://bibliotheque-rad.vercel.app/health`
+   - `https://bibliotheque-rad.vercel.app/`
 
 ## Commandes GitHub Push
 
