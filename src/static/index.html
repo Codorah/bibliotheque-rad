@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bibliotheque Municipale</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-0: #0f172a;
+      --bg-1: #1e293b;
+      --bg-2: #334155;
+      --ink: #e2e8f0;
+      --muted: #94a3b8;
+      --panel: rgba(15, 23, 42, 0.8);
+      --line: rgba(148, 163, 184, 0.25);
+      --accent: #f59e0b;
+      --accent-2: #22d3ee;
+      --ok: #10b981;
+      --bad: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      background:
+        radial-gradient(1200px 700px at 15% -10%, rgba(245, 158, 11, 0.25), transparent 60%),
+        radial-gradient(900px 500px at 95% 0%, rgba(34, 211, 238, 0.2), transparent 60%),
+        linear-gradient(140deg, var(--bg-0), var(--bg-1), var(--bg-2));
+    }
+
+    .shell {
+      width: min(1200px, 92%);
+      margin: 26px auto 50px;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Fraunces", serif;
+      font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+      line-height: 1.08;
+      letter-spacing: 0.01em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: transform 140ms ease, box-shadow 140ms ease, opacity 140ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-main {
+      background: linear-gradient(120deg, var(--accent), #fb7185);
+      color: #111827;
+      box-shadow: 0 8px 24px rgba(245, 158, 11, 0.28);
+    }
+
+    .btn-soft {
+      background: rgba(15, 23, 42, 0.45);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .status {
+      margin: 0 0 14px;
+      color: var(--muted);
+      min-height: 22px;
+      font-size: 0.9rem;
+    }
+
+    .status.ok {
+      color: var(--ok);
+    }
+
+    .status.bad {
+      color: var(--bad);
+    }
+
+    .stats {
+      display: flex;
+      gap: 10px;
+      margin: 0 0 18px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      backdrop-filter: blur(5px);
+      animation: reveal 420ms ease both;
+    }
+
+    .card:nth-child(2) {
+      animation-delay: 100ms;
+    }
+
+    .card:nth-child(3) {
+      animation-delay: 180ms;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-family: "Fraunces", serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.01em;
+    }
+
+    form {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.45);
+      color: var(--ink);
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #7c8aa0;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: 350px;
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px dashed rgba(148, 163, 184, 0.2);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 4px 9px;
+      cursor: pointer;
+      font-size: 0.76rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      .table-wrap {
+        max-height: 260px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="hero">
+      <div>
+        <h1>Bibliotheque Municipale</h1>
+        <div class="subtitle">Mini front admin connecte a votre API FastAPI.</div>
+      </div>
+      <div class="actions">
+        <button id="refreshBtn" class="btn btn-soft" type="button">Rafraichir</button>
+        <button id="seedBtn" class="btn btn-main" type="button">Alimenter demo</button>
+      </div>
+    </div>
+
+    <p id="status" class="status">Pret.</p>
+    <div class="stats">
+      <span id="bookCount" class="chip">Books: 0</span>
+      <span id="memberCount" class="chip">Members: 0</span>
+      <span id="loanCount" class="chip">Loans: 0</span>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>Books</h2>
+        <form id="bookForm">
+          <input name="title" placeholder="Title" required>
+          <input name="author" placeholder="Author" required>
+          <input name="isbn" placeholder="ISBN (10-32 chars)" required>
+          <input name="publication_year" type="number" placeholder="Publication year">
+          <input name="available_copies" type="number" min="0" value="1" placeholder="Available copies">
+          <button class="btn btn-main" type="submit">Ajouter Book</button>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Titre</th><th>Copies</th></tr>
+            </thead>
+            <tbody id="booksBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Members</h2>
+        <form id="memberForm">
+          <input name="name" placeholder="Name" required>
+          <input name="email" type="email" placeholder="Email" required>
+          <button class="btn btn-main" type="submit">Ajouter Member</button>
+        </form>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Nom</th><th>Email</th></tr>
+            </thead>
+            <tbody id="membersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Loans</h2>
+        <form id="loanForm">
+          <input name="book_id" type="number" min="1" placeholder="Book ID" required>
+          <input name="member_id" type="number" min="1" placeholder="Member ID" required>
+          <button class="btn btn-main" type="submit">Creer Loan</button>
+        </form>
+        <p class="muted">Pour retourner un livre: bouton "Return" sur un pret actif.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ID</th><th>Book/Member</th><th>Etat</th></tr>
+            </thead>
+            <tbody id="loansBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const booksBody = document.getElementById("booksBody");
+    const membersBody = document.getElementById("membersBody");
+    const loansBody = document.getElementById("loansBody");
+    const bookCount = document.getElementById("bookCount");
+    const memberCount = document.getElementById("memberCount");
+    const loanCount = document.getElementById("loanCount");
+
+    function setStatus(message, kind = "") {
+      statusEl.textContent = message;
+      statusEl.className = `status ${kind}`.trim();
+    }
+
+    async function api(url, options = {}) {
+      const config = { ...options };
+      if (config.body && !config.headers) {
+        config.headers = { "Content-Type": "application/json" };
+      }
+      const res = await fetch(url, config);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `HTTP ${res.status}`);
+      }
+      if (res.status === 204) {
+        return null;
+      }
+      return res.json();
+    }
+
+    function renderBooks(items) {
+      booksBody.innerHTML = items
+        .map(
+          (b) => `<tr>
+            <td>${b.id}</td>
+            <td>${b.title}<br><span class="muted">${b.author}</span></td>
+            <td>${b.available_copies}</td>
+          </tr>`
+        )
+        .join("");
+      bookCount.textContent = `Books: ${items.length}`;
+    }
+
+    function renderMembers(items) {
+      membersBody.innerHTML = items
+        .map(
+          (m) => `<tr>
+            <td>${m.id}</td>
+            <td>${m.name}</td>
+            <td>${m.email}</td>
+          </tr>`
+        )
+        .join("");
+      memberCount.textContent = `Members: ${items.length}`;
+    }
+
+    function renderLoans(items) {
+      loansBody.innerHTML = items
+        .map((l) => {
+          const active = l.return_date === null;
+          return `<tr>
+            <td>${l.id}</td>
+            <td>B:${l.book_id} / M:${l.member_id}</td>
+            <td>
+              ${active ? "Actif" : "Retourne"}
+              ${active ? `<br><button class="mini-btn" data-return-id="${l.id}" type="button">Return</button>` : ""}
+            </td>
+          </tr>`;
+        })
+        .join("");
+      loanCount.textContent = `Loans: ${items.length}`;
+    }
+
+    async function refreshAll() {
+      try {
+        setStatus("Chargement...", "");
+        const [books, members, loans] = await Promise.all([
+          api("/books/"),
+          api("/members/"),
+          api("/loans/")
+        ]);
+        renderBooks(books);
+        renderMembers(members);
+        renderLoans(loans);
+        setStatus("Donnees synchronisees.", "ok");
+      } catch (err) {
+        setStatus(`Erreur: ${err.message}`, "bad");
+      }
+    }
+
+    document.getElementById("bookForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const data = {
+        title: form.title.value.trim(),
+        author: form.author.value.trim(),
+        isbn: form.isbn.value.trim(),
+        publication_year: form.publication_year.value ? Number(form.publication_year.value) : null,
+        available_copies: form.available_copies.value ? Number(form.available_copies.value) : 0
+      };
+      try {
+        await api("/books/", { method: "POST", body: JSON.stringify(data) });
+        form.reset();
+        form.available_copies.value = 1;
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Book: ${err.message}`, "bad");
+      }
+    });
+
+    document.getElementById("memberForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim()
+      };
+      try {
+        await api("/members/", { method: "POST", body: JSON.stringify(data) });
+        form.reset();
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Member: ${err.message}`, "bad");
+      }
+    });
+
+    document.getElementById("loanForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const data = {
+        book_id: Number(form.book_id.value),
+        member_id: Number(form.member_id.value)
+      };
+      try {
+        await api("/loans/", { method: "POST", body: JSON.stringify(data) });
+        form.reset();
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Loan: ${err.message}`, "bad");
+      }
+    });
+
+    loansBody.addEventListener("click", async (e) => {
+      const target = e.target;
+      if (!(target instanceof HTMLElement)) {
+        return;
+      }
+      const loanId = target.getAttribute("data-return-id");
+      if (!loanId) {
+        return;
+      }
+      try {
+        await api(`/loans/${loanId}/return`, { method: "PUT", body: JSON.stringify({}) });
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Return: ${err.message}`, "bad");
+      }
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", refreshAll);
+
+    document.getElementById("seedBtn").addEventListener("click", async () => {
+      try {
+        const result = await api("/seed-demo", { method: "POST" });
+        const c = result.created;
+        setStatus(`Seed: +${c.books} books, +${c.members} members, +${c.loans} loans`, "ok");
+        await refreshAll();
+      } catch (err) {
+        setStatus(`Seed: ${err.message}`, "bad");
+      }
+    });
+
+    refreshAll();
+  </script>
+</body>
+</html>

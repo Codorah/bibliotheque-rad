@@ -10,8 +10,8 @@ Backend FastAPI pour la gestion des livres, adherents et emprunts, avec modelisa
 - [x] Fichiers DSL Telosys (`TelosysTools/models/LibraryModel/*.entity`)
 - [x] `requirements.txt`
 - [x] `README.md` documente
-- [ ] Captures d'ecran du processus Telosys (a inserer ici)
-- [ ] Lien GitHub public
+- [x] telosys.png
+- [x] https://github.com/Codorah/bibliotheque-rad.git
 - [ ] Lien API deployee
 
 ## Structure
@@ -27,6 +27,8 @@ Backend FastAPI pour la gestion des livres, adherents et emprunts, avec modelisa
 |   |-- models/
 |   |   |-- __init__.py
 |   |   `-- models.py
+|   |-- static/
+|   |   `-- index.html
 |   `-- routes/
 |       |-- __init__.py
 |       |-- books.py
@@ -98,6 +100,7 @@ Swagger:
 
 - `http://127.0.0.1:8000/docs`
 - `http://127.0.0.1:8000/redoc`
+- Frontend mini dashboard: `http://127.0.0.1:8000/app`
 
 ## API CRUD (minimum)
 
@@ -125,6 +128,7 @@ Swagger:
 - `PUT /loans/{loan_id}`
 - `PUT /loans/{loan_id}/return`
 - `DELETE /loans/{loan_id}`
+- `POST /seed-demo` (alimente des donnees de demonstration si la base est vide)
 
 ## Regles de Validation
 
