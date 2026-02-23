@@ -10,7 +10,8 @@ Backend FastAPI pour la gestion des livres, adherents et emprunts, avec modelisa
 - [x] Fichiers DSL Telosys (`TelosysTools/models/LibraryModel/*.entity`)
 - [x] `requirements.txt`
 - [x] `README.md` documente
-- [x] telosys.png
+- [x] telosys.png (processus telosys)
+- [x] diagramme.png(diagramme plantuml)
 - [x] https://github.com/Codorah/bibliotheque-rad.git
 - [ ] Lien API deployee
 
@@ -213,10 +214,10 @@ Inserer des captures:
 4. Telechargement bundle
 5. Generation de code
 
-## Deploiement sur Vercel (au lieu de Render)
+## Deploiement sur Vercel 
 
 1. Pousser le code sur GitHub (repo public).
-2. Creer une base PostgreSQL (Neon, Render PostgreSQL, Supabase, etc.).
+2. Creer une base PostgreSQL  Render 
 3. Importer le repo dans Vercel.
 4. Garder `vercel.json` du projet (route tout vers `api/index.py`).
 5. Ajouter la variable d'environnement `DATABASE_URL` dans Vercel.
@@ -231,6 +232,6 @@ git init
 git add .
 git commit -m "Backend FastAPI + Telosys + Vercel config"
 git branch -M main
-git remote add origin https://github.com/<ton-user>/<ton-repo>.git
+git remote add origin https://github.com/Codorah/bibliotheque-rad.git
 git push -u origin main
 ```
