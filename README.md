@@ -72,6 +72,15 @@ Fichiers DSL utilises:
 - `TelosysTools/models/LibraryModel/Loan.entity`
 
 ## Installation Locale
+Préparation de l'environnement
+
+    Créer le dossier du projet : mkdir bibliotheque-rad && cd bibliotheque-rad
+
+    Initialiser Python : python -m venv venv
+
+    Activer l'environnement :
+
+        Windows : venv\Scripts\activate
 
 ```bash
 python -m venv venv
