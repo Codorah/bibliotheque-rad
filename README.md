@@ -1,247 +1,134 @@
-# Systeme de Gestion de Bibliotheque Municipale
+# 📚 Bibliothèque Municipale - API REST (Projet RAD)
 
-Backend FastAPI pour la gestion des livres, adherents et emprunts, avec modelisation Telosys et persistance PostgreSQL.
+Ce projet est le backend d'un système de gestion de bibliothèque municipale développé dans le cadre de l'évaluation de   RAD (Rapid Application Development)  . L'architecture a été conçue via une approche  Model-First  en utilisant le générateur de code *Telosys*, propulsée par *FastAPI* et hébergée en mode Serverless sur *Vercel* avec une base de données *PostgreSQL* sur *Render*.
 
-## Livrables Examen (Checklist)
+🔗 *URL de l'API (Production):   [https://bibliotheque-rad.vercel.app](https://bibliotheque-rad.vercel.app)  
+📖   Documentation Swagger :   [https://bibliotheque-rad.vercel.app/docs](https://bibliotheque-rad.vercel.app/docs)
 
-- [x] Code backend FastAPI (`src/`)
-- [x] Dossier modeles SQLAlchemy (`src/models/`)
-- [x] Dossier routes API (`src/routes/`)
-- [x] Fichiers DSL Telosys (`TelosysTools/models/LibraryModel/*.entity`)
-- [x] `requirements.txt`
-- [x] `README.md` documente
-- [x] telosys.png (processus telosys)
-- [x] diagramme.png(diagramme plantuml)
-- [x] https://github.com/Codorah/bibliotheque-rad.git
-- [ ] Lien API deployee
+---
 
-## Structure
+## 🏗️ Architecture et Arborescence du Projet
 
-```txt
-.
-|-- api/
-|   `-- index.py
-|-- src/
-|   |-- database.py
-|   |-- main.py
-|   |-- schemas.py
-|   |-- models/
-|   |   |-- __init__.py
-|   |   `-- models.py
-|   |-- static/
-|   |   `-- index.html
-|   `-- routes/
-|       |-- __init__.py
-|       |-- books.py
-|       |-- members.py
-|       `-- loans.py
-|-- TelosysTools/
-|   `-- models/
-|       `-- LibraryModel/
-|           |-- Book.entity
-|           |-- Member.entity
-|           `-- Loan.entity
-|-- requirements.txt
-`-- vercel.json
-```
+L'arborescence a été pensée pour séparer la configuration Serverless (Vercel), la logique métier (src) et la modélisation (TelosysTools).
 
-## Entites du Domaine
+```text
+bibliotheque-rad/
+├── api/
+│   └── index.py               # Point d'entrée Serverless pour Vercel
+├── src/
+│   ├── main.py                # Définition de l'application FastAPI et des routes
+│   ├── database.py            # Configuration SQLAlchemy et connexion DB
+│   ├── models.py              # Modèles ORM générés
+│   └── schemas.py             # Schémas Pydantic (Validation des données, ex: ISBN)
+├── TelosysTools/
+│   ├── models/
+│   │   └── LibraryModel/      # Fichiers DSL (.entity) définissant le domaine
+│   └── telosys.cfg            # Configuration globale Telosys
+├── .env                       # Variables d'environnement (ignoré par Git)
+├── .gitignore                 # Fichiers à ignorer (venv, .env, __pycache__)
+├── requirements.txt           # Dépendances du projet (FastAPI, psycopg2-binary...)
+├── vercel.json                # Fichier de configuration du déploiement Vercel
+└── README.md                  # Documentation du projet
 
-- `Book`: `id`, `title`, `author`, `isbn`, `publication_year`, `available_copies`
-- `Member`: `id`, `name`, `email`, `membership_date`
-- `Loan`: `id`, `book_id`, `member_id`, `loan_date`, `return_date`
+Phase 1 : Initialisation et Dépôt Git
 
-## Telosys (CLI)
-
-Dans le terminal `telosys>`:
-
-```txt
-h .
-init
-nm LibraryModel
-m LibraryModel
-ne Book
-ne Member
-ne Loan
-```
-
-Fichiers DSL utilises:
-
-- `TelosysTools/models/LibraryModel/Book.entity`
-- `TelosysTools/models/LibraryModel/Member.entity`
-- `TelosysTools/models/LibraryModel/Loan.entity`
-
-## Installation Locale
-Préparation de l'environnement
-
-    Créer le dossier du projet : mkdir bibliotheque-rad && cd bibliotheque-rad
-
-    Initialiser Python : python -m venv venv
-
-    Activer l'environnement :
-
-        Windows : venv\Scripts\activate
-
-```bash
+Plutôt que de cloner un projet existant, j'ai initialisé le projet de zéro :
+# 1. Création du dossier et de l'environnement virtuel
+mkdir bibliotheque-rad && cd bibliotheque-rad
 python -m venv venv
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
+venv\Scripts\activate  # (Sous Windows)
 
-pip install -r requirements.txt
-```
-
-## Configuration Environnement
-
-Copier `.env.example` vers `.env`:
-
-```env
-DATABASE_URL=postgresql+psycopg2://user:password@localhost:5432/library_db
-```
-
-## Lancer l'API
-
-```bash
-uvicorn src.main:app --reload
-```
-
-Swagger:
-
-- `http://bibliotheque-rad.vercel.app/docs`
-- `http:/bibliotheque-rad.vercel.app/books`
-
-
-## API CRUD (minimum)
-
-### Book
-
-- `POST /books/`
-- `GET /books/`
-- `GET /books/{book_id}`
-- `PUT /books/{book_id}`
-- `DELETE /books/{book_id}`
-
-### Member
-
-- `POST /members/`
-- `GET /members/`
-- `GET /members/{member_id}`
-- `PUT /members/{member_id}`
-- `DELETE /members/{member_id}`
-
-### Loan
-
-- `POST /loans/`
-- `GET /loans/`
-- `GET /loans/{loan_id}`
-- `PUT /loans/{loan_id}`
-- `PUT /loans/{loan_id}/return`
-- `DELETE /loans/{loan_id}`
-- `POST /seed-demo` (alimente des donnees de demonstration si la base est vide)
-
-## Regles de Validation
-
-- ISBN unique pour `Book`.
-- Email unique pour `Member`.
-- Un pret (`Loan`) ne peut etre cree que si:
-  - le livre existe,
-  - l'adherent existe,
-  - `available_copies > 0`.
-
-## Diagramme UML
-
-```mermaid
-classDiagram
-  class Book {
-    +int id
-    +string title
-    +string author
-    +string isbn
-    +int publication_year
-    +int available_copies
-  }
-
-  class Member {
-    +int id
-    +string name
-    +string email
-    +date membership_date
-  }
-
-  class Loan {
-    +int id
-    +int book_id
-    +int member_id
-    +date loan_date
-    +date return_date
-  }
-
-  Book "1" --> "0..*" Loan : has
-  Member "1" --> "0..*" Loan : makes
-```
-
-## Schema BD (ER)
-
-```mermaid
-erDiagram
-  BOOKS ||--o{ LOANS : has
-  MEMBERS ||--o{ LOANS : makes
-
-  BOOKS {
-    int id PK
-    string title
-    string author
-    string isbn UK
-    int publication_year
-    int available_copies
-  }
-
-  MEMBERS {
-    int id PK
-    string name
-    string email UK
-    date membership_date
-  }
-
-  LOANS {
-    int id PK
-    int book_id FK
-    int member_id FK
-    date loan_date
-    date return_date
-  }
-```
-
-## Captures d'Ecran Telosys (a inserer)
-
-Inserer des captures:
-
-1. `Telosys: Init project`
-2. `Telosys: New model` (`LibraryModel`)
-3. Creation de `Book.entity`, `Member.entity`, `Loan.entity`
-4. Telechargement bundle
-5. Generation de code
-
-## Deploiement sur Vercel 
-
-1. Pousser le code sur GitHub (repo public).
-2. Creer une base PostgreSQL  Render 
-3. Importer le repo dans Vercel.
-4. Garder `vercel.json` du projet (route tout vers `api/index.py`).
-5. Ajouter la variable d'environnement `DATABASE_URL` dans Vercel.
-6. Deploy et tester:
-   - `https://bibliotheque-rad.vercel.app/docs`
-   - `https://bibliotheque-rad.vercel.app/health`
-   - `https://bibliotheque-rad.vercel.app/`
-
-## Commandes GitHub Push
-
-```bash
+# 2. Initialisation de Git
 git init
 git add .
-git commit -m "Backend FastAPI + Telosys + Vercel config"
+git commit -m "Initial commit"
 git branch -M main
-git remote add origin https://github.com/Codorah/bibliotheque-rad.git
+git remote add origin [https://github.com/Codorah/bibliotheque-rad.git](https://github.com/Codorah/bibliotheque-rad.git)
 git push -u origin main
-```
+
+Phase 2 : Modélisation avec Telosys (RAD)
+
+Pour accélérer le développement, le modèle de données a été conçu avec le CLI Telosys
+
+# Lancement de Telosys CLI
+telosys
+# Configuration du répertoire de travail et initialisation
+h .
+m librarymodel
+init
+
+J'ai ensuite défini trois entités principales dans mes fichiers DSL :
+
+    Book.entity : Gestion des livres (avec contrainte d'unicité sur l'ISBN).
+
+    Member.entity : Gestion des adhérents (avec email unique).
+
+    Loan.entity : Table pivot gérant les dates d'emprunt et de retour.
+
+    📸 Capture Telosys : Traces de la génération du modèle.
+    (Insérer ici l'image telosys.png)
+
+
+Phase 3 : Développement Backend (FastAPI)
+
+    Dépendances : Installation des paquets requis via pip install fastapi uvicorn sqlalchemy psycopg2-binary pydantic.
+
+    Base de données : Utilisation de SQLAlchemy pour se connecter à l'instance PostgreSQL.
+
+    Validation : Utilisation de Pydantic pour valider les requêtes entrantes (notamment le format des ISBN).
+
+Phase 4 : Exécution en Local
+
+Pour tester l'API sur la machine de développement :
+
+# Installation des dépendances
+pip install -r requirements.txt
+
+# Création du fichier .env
+echo DATABASE_URL=postgresql://user:password@localhost/dbname > .env
+
+# Lancement du serveur
+uvicorn api.index:app --reload
+
+L'interface locale est alors accessible sur http://127.0.0.1:8000/docs.
+Phase 5 : Déploiement Cloud (Vercel & Render)
+
+L'architecture de production est distribuée :
+
+    Base de données (Render) : Hébergement gratuit d'une base PostgreSQL. J'ai récupéré l'External Database URL pour permettre les connexions entrantes.
+
+    API (Vercel) : Déploiement du code via GitHub.
+
+        Configuration du fichier vercel.json pour router le trafic vers api/index.py.
+
+        Ajout de la variable DATABASE_URL dans les Settings de Vercel.
+
+📊 Modélisation et Schémas
+1. Diagramme de Classe UML (Domaine)
+
+Ce diagramme illustre la structure métier du projet. Un adhérent peut avoir plusieurs emprunts, et chaque emprunt est lié à un livre spécifique.
+
+(Insérer ici l'image diagramme.png)
+2. Schéma de la Base de Données (PostgreSQL)
+
+Le modèle physique généré dans la base de données reflète les contraintes de notre application :
+
+    Table books : id (PK), title, author, isbn (UNIQUE), publication_year, available_copies.
+
+    Table members : id (PK), name, email (UNIQUE), membership_date.
+
+    Table loans : id (PK), book_id (FK -> books.id), member_id (FK -> members.id), loan_date, return_date.
+
+📌 Tests et Validation de l'API
+
+L'API expose un CRUD complet pour chaque entité. La documentation Swagger générée automatiquement permet de tester ces routes.
+
+Exemples de points de terminaison :
+
+    GET /books/ : Lister tous les livres.
+
+    POST /books/ : Ajouter un nouveau livre (Valide que l'ISBN n'existe pas déjà).
+
+    POST /loans/ : Créer un nouvel emprunt (Vérifie la disponibilité du livre).
+
+📸 Capture Swagger : Test réussi de l'interface en production.(swagger.png)
