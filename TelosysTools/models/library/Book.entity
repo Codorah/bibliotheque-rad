@@ -1,0 +1,8 @@
+Book {
+  id : int { @Id, @AutoIncremented } ;
+  title : string { @NotNull } ;
+  author : string { @NotNull } ;
+  isbn : string { @Unique, @NotNull } ;
+  publication_year : int ;
+  available_copies : int ;
+}

@@ -1,0 +1,23 @@
+Book {
+  id : int { @Id, @AutoIncremented } ;
+  title : string { @NotNull } ;
+  author : string { @NotNull } ;
+  isbn : string { @Unique, @NotNull } ;
+  publication_year : int ;
+  available_copies : int ;
+}
+
+Member {
+  id : int { @Id, @AutoIncremented } ;
+  name : string { @NotNull } ;
+  email : string { @NotNull, @Unique } ;
+  membership_date : date ;
+}
+
+Loan {
+  id : int { @Id, @AutoIncremented } ;
+  book_id : int { @FK(Book) } ;
+  member_id : int { @FK(Member) } ;
+  loan_date : date ;
+  return_date : date ;
+}

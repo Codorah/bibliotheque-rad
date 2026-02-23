@@ -1,0 +1,7 @@
+Loan {
+  id : int { @Id, @AutoIncremented } ;
+  book_id : int { @FK(Book) } ;
+  member_id : int { @FK(Member) } ;
+  loan_date : date ;
+  return_date : date ;
+}

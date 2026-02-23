@@ -1,0 +1,6 @@
+Member {
+  id : int { @Id, @AutoIncremented } ;
+  name : string { @NotNull } ;
+  email : string { @NotNull, @Unique } ;
+  membership_date : date ;
+}
