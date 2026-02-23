@@ -1,7 +1,7 @@
 from datetime import date
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -14,11 +14,14 @@ from src.routes.members import router as members_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Gestion Bibliotheque Municipale")
+STATIC_DIR = Path(__file__).parent / "static"
+FRONTEND_FILE = STATIC_DIR / "index.html"
 
 app.include_router(books_router)
 app.include_router(members_router)
 app.include_router(loans_router)
-app.mount("/static", StaticFiles(directory="src/static"), name="static")
+if STATIC_DIR.exists():
+    app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 
 
 def seed_demo_data() -> dict[str, int]:
@@ -99,7 +102,9 @@ def read_root():
 
 @app.get("/app")
 def frontend():
-    return FileResponse(Path("src/static/index.html"))
+    if not FRONTEND_FILE.exists():
+        raise HTTPException(status_code=404, detail="Frontend not found")
+    return FileResponse(FRONTEND_FILE)
 
 
 @app.post("/seed-demo")
